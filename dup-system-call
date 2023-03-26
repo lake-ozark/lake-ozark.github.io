@@ -1,0 +1,6 @@
+dup
+dup2
+
+it duplicates the file descriptor 
+it can be used by clising any existing fd and copy new fd over that.
+
