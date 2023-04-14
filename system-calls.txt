@@ -1,0 +1,22 @@
+recv - 
+recvfrom - 
+recvmsg - 
+
+write
+
+
+select - 
+pselect - 
+
+inet_pton
+inet_ntop
+htons
+ntohs 
+
+socket
+setsockopt
+bind
+listen
+connect
+accept
+
