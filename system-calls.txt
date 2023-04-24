@@ -1,19 +1,16 @@
 recv() - 
 recvfrom() - 
 recvmsg() - 
-
 write()
 sendto()
-
 select - 
 pselect - 
-
 inet_pton
 inet_ntop
 htons
 ntohs 
 
-socket(int domain, int type, int protocol) - 
+--------------socket(int domain, int type, int protocol) ------------------- 
 Starting with kernel 2.6.27, Linux provides a second use for the type argument,
 by allowing two nonstandard flags to be ORed with the socket type. The
 SOCK_CLOEXEC flag causes the kernel to enable the close-on-exec flag (FD_CLOEXEC)
@@ -22,21 +19,50 @@ O_CLOEXEC flag described in Section 4.3.1. The SOCK_NONBLOCK flag causes the ker
 to set the O_NONBLOCK flag on the underlying open file description, so that future
 I/O operations on the socket will be nonblocking. This saves additional calls
 to fcntl() to achieve the same result.
-
+                  -------------
 
 setsockopt(int fd, )
 getsockname()
 bind(int fd, const struct sockaddr *sock, socklen_t socklength)
 
- ----- listen(int sockfd, int backlog) -------
+ ------------ listen(int sockfd, int backlog) -------------
 The backlog argument allows us to limit the number of such pending connections. 
 Connection requests up to this limit succeed immediately. Further connection requests block until a pending connection
 is accepted (via accept()), and thus removed from the queue of pending connections.
  SUSv3 specifies that the implementation should advertise this limit by defining the constant SOMAXCONN in <sys/socket.h>.
 On Linux, this constant is defined with the value 128. However, since kernel 2.4.25, Linux allows this limit to be adjusted at run time via the Linux-specific /proc/sys/net/core/somaxconn file. 
 (In earlier kernel versions, the SOMAXCONN limit is immutable.). All modern implementations allow higher values of backlog, which are necessary for network servers employing TCP sockets to serve large numbers of clients.
-
+           -------------
 
 connect()
-accept()
 
+
+--------accept(int fd, struct sockaddr * addr, socklen_t *len) ----------
+The key point to understand about accept() is that it creates a new socket, and it is
+this new socket that is connected to the peer socket that performed the connect(). A
+file descriptor for the connected socket is returned as the function result of the
+accept() call. The listening socket (sockfd) remains open, and can be used to accept
+further connections. A typical server application creates one listening socket, binds
+it to a well-known address, and then handles all client requests by accepting connections via that socket.
+The remaining arguments to accept() return the address of the peer socket. The
+addr argument points to a structure that is used to return the socket address. The type
+of this argument depends on the socket domain (as for bind()).
+The addrlen argument is a value-result argument. It points to an integer that,
+prior to the call, must be initialized to the size of the buffer pointed to by addr, so
+that the kernel knows how much space is available to return the socket address.
+Upon return from accept(), this integer is set to indicate the number of bytes of data
+actually copied into the buffer.
+If we are not interested in the address of the peer socket, then addr and addrlen
+should be specified as NULL and 0, respectively. (If desired, we can retrieve the peer’s
+address later using the getpeername() system call, as described in Section 61.5.)
+Starting with kernel 2.6.28, Linux supports a new, nonstandard system call,
+accept4(). This system call performs the same task as accept(), but supports an
+additional argument, flags, that can be used to modify the behavior of the system
+call. Two flags are supported: SOCK_CLOEXEC and SOCK_NONBLOCK. The SOCK_CLOEXEC
+flag causes the kernel to enable the close-on-exec flag (FD_CLOEXEC) for the new
+file descriptor returned by the call. This flag is useful for the same reasons as
+the open() O_CLOEXEC flag described in Section 4.3.1. The SOCK_NONBLOCK flag
+causes the kernel to enable the O_NONBLOCK flag on the underlying open file
+description, so that future I/O operations on the socket will be nonblocking.
+This saves additional calls to fcntl() to achieve the same result.
+        ----------------------------
