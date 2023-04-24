@@ -13,7 +13,17 @@ inet_ntop
 htons
 ntohs 
 
-socket(int domain, int type, int protocol)
+socket(int domain, int type, int protocol) - 
+Starting with kernel 2.6.27, Linux provides a second use for the type argument,
+by allowing two nonstandard flags to be ORed with the socket type. The
+SOCK_CLOEXEC flag causes the kernel to enable the close-on-exec flag (FD_CLOEXEC)
+for the new file descriptor. This flag is useful for the same reasons as the open()
+O_CLOEXEC flag described in Section 4.3.1. The SOCK_NONBLOCK flag causes the kernel
+to set the O_NONBLOCK flag on the underlying open file description, so that future
+I/O operations on the socket will be nonblocking. This saves additional calls
+to fcntl() to achieve the same result.
+
+
 setsockopt(int fd, )
 getsockname()
 bind(int fd, const struct sockaddr *sock, socklen_t socklength)
