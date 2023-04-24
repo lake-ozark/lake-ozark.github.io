@@ -1,9 +1,9 @@
-recv - 
-recvfrom - 
-recvmsg - 
+recv() - 
+recvfrom() - 
+recvmsg() - 
 
-write
-
+write()
+sendto()
 
 select - 
 pselect - 
@@ -13,10 +13,11 @@ inet_ntop
 htons
 ntohs 
 
-socket
-setsockopt
-bind
-listen
-connect
-accept
+socket(int domain, int type, int protocol)
+setsockopt(int fd, )
+getsockname()
+bind(int fd, const struct sockaddr *sock, socklen_t socklength)
+listen()
+connect()
+accept()
 
