@@ -32,7 +32,9 @@ bind(int fd, const struct sockaddr *sock, socklen_t socklength)
 The backlog argument allows us to limit the number of such pending connections. 
 Connection requests up to this limit succeed immediately. Further connection requests block until a pending connection
 is accepted (via accept()), and thus removed from the queue of pending connections.
- SUSv3 specifies that the implementation should advertise this limit by defining the constant SOMAXCONN in <sys/socket.h>. On Linux, this constant is defined with the value 128. However, since kernel 2.4.25, Linux allows this limit to be adjusted at run time via the Linux-specific /proc/sys/net/core/somaxconn file. (In earlier kernel versions, the SOMAXCONN limit is immutable.). All modern implementations allow higher values of backlog, which are necessary for network servers employing TCP sockets to serve large numbers of clients.
+ SUSv3 specifies that the implementation should advertise this limit by defining the constant SOMAXCONN in <sys/socket.h>.
+On Linux, this constant is defined with the value 128. However, since kernel 2.4.25, Linux allows this limit to be adjusted at run time via the Linux-specific /proc/sys/net/core/somaxconn file. 
+(In earlier kernel versions, the SOMAXCONN limit is immutable.). All modern implementations allow higher values of backlog, which are necessary for network servers employing TCP sockets to serve large numbers of clients.
 
 
 connect()
