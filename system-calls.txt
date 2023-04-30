@@ -46,6 +46,18 @@ it receives a SIGPIPE signal, and the system call fails with the error EPIPE . A
 noted in Section 44.2, the usual way of dealing with this possibility is to ignore
 the SIGPIPE signal and find out about the closed connection via the EPIPE error.
 
+------------------ close()-----------------------
+The usual way of terminating a stream socket connection is to call close(). If multiple
+file descriptors refer to the same socket, then the connection is terminated when all
+of the descriptors are closed.
+Suppose that, after we close a connection, the peer application crashes or other-
+wise fails to read or correctly process the data that we previously sent to it. In this
+case, we have no way of knowing that an error occurred. If we need to ensure that
+the data was successfully read and processed, then we must build some type of
+acknowledgement protocol into our application. This normally consists of an
+explicit acknowledgement message passed back to us from the peer.
+---------------------------
+
 
 --------accept(int fd, struct sockaddr * addr, socklen_t *len) ----------
 The key point to understand about accept() is that it creates a new socket, and it is
